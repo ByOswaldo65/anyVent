@@ -9,6 +9,8 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "./conection/firebase-config";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const { width, height } = Dimensions.get('window');
 const fondoLogin = require('../assets/img/charlie-harris-__UJv4GPRFE-unsplash.jpg');
 
@@ -16,17 +18,24 @@ const Login = () => {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const navigation = useNavigation();
-
-    const goToHome = () => {
+    
+    const handleLogin = () => {
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);        
 
         signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
-            console.log("Usuario logueado con éxito: ", user);
-            console.log("Redireccionando a HomeScreen ");
-            navigation.navigate('HomeScreen');            
+            const token = user.stsTokenManager.accessToken;
+            console.log("Usuario logueado con éxito: ", token);
+            AsyncStorage.setItem('authToken', token)
+                .then(() => {
+                    console.log("Token almacenado con éxito");
+                    navigation.navigate('HomeScreen');
+                })
+                .catch((error) => {
+                    console.error("Error al almacenar el token: ", error);
+                });         
         })
         .catch((error) => {
             console.error("Error al iniciar sesión: ", error);
@@ -64,7 +73,7 @@ const Login = () => {
                 <ContenedorBotones
                     textoPrincipal="Iniciar sesión"
                     textoSecundario="Crear una nueva cuenta"
-                    funcionPrincipal={ goToHome }
+                    funcionPrincipal={ handleLogin }
                     funcionSecundaria={ viewCrearCuenta }
                 />
             </View>

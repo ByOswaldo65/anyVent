@@ -25,7 +25,8 @@ const RegistrarEmpresa = () => {
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-    
+
+        
         createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
@@ -38,8 +39,7 @@ const RegistrarEmpresa = () => {
                 ncontacto: phone,
                 nestatus: "1"
             };
-    
-            // Guardar los datos adicionales en Firestore
+                
             addDoc(collection(db, "users"), userData)
             .then(() => {
                 console.log("Datos adicionales guardados con éxito en Firestore");
