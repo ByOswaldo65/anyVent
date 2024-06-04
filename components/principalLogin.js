@@ -1,52 +1,39 @@
-// Login.js
+// principalLogin.js
 import React from "react";
 import { View, Text, StyleSheet, Dimensions, ImageBackground } from "react-native";
 import { useNavigation } from '@react-navigation/native';
-import ContenedorInput from "./elementosLogin/ContenedorInput";
 import ContenedorBotones from "./elementosLogin/ContenedorBotones";
 
 const { width, height } = Dimensions.get('window');
 const fondoLogin = require('../assets/img/charlie-harris-__UJv4GPRFE-unsplash.jpg');
 
-const Login = () => {
-    const navigation = useNavigation();
+const PrincipalLogin = () => {
+    const navigation = useNavigation()
 
-    const goToHome = () => {
-        console.log("Redireccionando a HomeScreen");
-        navigation.navigate('HomeScreen');
+    const viewLogin = () => {
+        console.log("Redireccionando a Login")
+        navigation.navigate('Login')
     }
 
     const viewCrearCuenta = () => {
-        console.log("Redireccionando a Crear Cuenta");
-        navigation.navigate('CrearCuenta');
+        console.log("Redireccionando a Crear Cuenta")
+        navigation.navigate('CrearCuenta')
     }
 
     return (
         <ImageBackground source={fondoLogin} style={styles.backgroundImage}>
             <View style={styles.overlay}>
                 <View style={styles.header}>
-                    <Text style={styles.title}>Iniciar sesión</Text>
-                    <Text style={styles.subtitle}>Ingresa los siguientes datos</Text>
+                    <Text style={styles.title}>Visualiza tus rendimientos</Text>
+                    <Text style={styles.subtitle}>Deja que anyVent te guíe</Text>
                 </View>
                 <View style={styles.inputContainer}>
-                    <ContenedorInput
-                        labelText="Nombre de usuario"
-                        placeholderText="UsuarioEjemplo"
-                        password={false}
-                        id="inputUsuario"
-                    />
-                    <ContenedorInput
-                        labelText="Contraseña"
-                        placeholderText="••••••••"
-                        password={true}
-                        id="inputPassword"
-                    />
                 </View>
                 <ContenedorBotones
-                    textoPrincipal="Iniciar sesión"
-                    textoSecundario="Crear una nueva cuenta"
-                    funcionPrincipal={ goToHome }
-                    funcionSecundaria={ viewCrearCuenta }
+                    textoPrincipal="Crear nueva cuenta"
+                    textoSecundario="Ya tengo una cuenta"
+                    funcionPrincipal={ viewCrearCuenta }
+                    funcionSecundaria={ viewLogin }
                 />
             </View>
         </ImageBackground>
@@ -91,4 +78,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Login;
+export default PrincipalLogin

@@ -1,4 +1,4 @@
-// Login.js
+// crearCuenta.js
 import React from "react";
 import { View, Text, StyleSheet, Dimensions, ImageBackground } from "react-native";
 import { useNavigation } from '@react-navigation/native';
@@ -8,24 +8,24 @@ import ContenedorBotones from "./elementosLogin/ContenedorBotones";
 const { width, height } = Dimensions.get('window');
 const fondoLogin = require('../assets/img/charlie-harris-__UJv4GPRFE-unsplash.jpg');
 
-const Login = () => {
+const CrearCuenta = () => {
     const navigation = useNavigation();
 
-    const goToHome = () => {
-        console.log("Redireccionando a HomeScreen");
-        navigation.navigate('HomeScreen');
+    const viewLogin = () => {
+        console.log("Redireccionando a Login");
+        navigation.navigate('Login');
     }
 
-    const viewCrearCuenta = () => {
-        console.log("Redireccionando a Crear Cuenta");
-        navigation.navigate('CrearCuenta');
+    const viewRegistrarEmpresa = () => {
+        console.log("Redireccionando a Registrar Empresa");
+        navigation.navigate('RegistrarEmpresa');
     }
 
     return (
         <ImageBackground source={fondoLogin} style={styles.backgroundImage}>
             <View style={styles.overlay}>
                 <View style={styles.header}>
-                    <Text style={styles.title}>Iniciar sesión</Text>
+                    <Text style={styles.title}>Crear nueva cuenta</Text>
                     <Text style={styles.subtitle}>Ingresa los siguientes datos</Text>
                 </View>
                 <View style={styles.inputContainer}>
@@ -36,6 +36,18 @@ const Login = () => {
                         id="inputUsuario"
                     />
                     <ContenedorInput
+                        labelText="Correo electrónico"
+                        placeholderText="user@gmail.com"
+                        password={false}
+                        id="inputCorreo"
+                    />
+                    <ContenedorInput
+                        labelText="Número de contacto"
+                        placeholderText="442#######"
+                        password={false}
+                        id="inputNumero"
+                    />
+                    <ContenedorInput
                         labelText="Contraseña"
                         placeholderText="••••••••"
                         password={true}
@@ -43,10 +55,10 @@ const Login = () => {
                     />
                 </View>
                 <ContenedorBotones
-                    textoPrincipal="Iniciar sesión"
-                    textoSecundario="Crear una nueva cuenta"
-                    funcionPrincipal={ goToHome }
-                    funcionSecundaria={ viewCrearCuenta }
+                    textoPrincipal="Crear cuenta y registrar mi empresa"
+                    textoSecundario="Ya tengo una cuenta"
+                    funcionPrincipal={ viewRegistrarEmpresa }
+                    funcionSecundaria={ viewLogin }
                 />
             </View>
         </ImageBackground>
@@ -91,4 +103,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Login;
+export default CrearCuenta;

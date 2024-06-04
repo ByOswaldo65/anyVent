@@ -1,4 +1,4 @@
-// Login.js
+// registrarEmpresa.js
 import React from "react";
 import { View, Text, StyleSheet, Dimensions, ImageBackground } from "react-native";
 import { useNavigation } from '@react-navigation/native';
@@ -8,45 +8,46 @@ import ContenedorBotones from "./elementosLogin/ContenedorBotones";
 const { width, height } = Dimensions.get('window');
 const fondoLogin = require('../assets/img/charlie-harris-__UJv4GPRFE-unsplash.jpg');
 
-const Login = () => {
+const RegistrarEmpresa = () => {
     const navigation = useNavigation();
 
-    const goToHome = () => {
-        console.log("Redireccionando a HomeScreen");
-        navigation.navigate('HomeScreen');
-    }
-
-    const viewCrearCuenta = () => {
-        console.log("Redireccionando a Crear Cuenta");
-        navigation.navigate('CrearCuenta');
+    const viewLogin = () => {
+        console.log("Redireccionando a Login");
+        navigation.navigate('Login');
     }
 
     return (
         <ImageBackground source={fondoLogin} style={styles.backgroundImage}>
             <View style={styles.overlay}>
                 <View style={styles.header}>
-                    <Text style={styles.title}>Iniciar sesión</Text>
+                    <Text style={styles.title}>Registra tu empresa</Text>
                     <Text style={styles.subtitle}>Ingresa los siguientes datos</Text>
                 </View>
                 <View style={styles.inputContainer}>
                     <ContenedorInput
-                        labelText="Nombre de usuario"
-                        placeholderText="UsuarioEjemplo"
+                        labelText="Nombre de la empresa"
+                        placeholderText="NombreEjemplo"
                         password={false}
-                        id="inputUsuario"
+                        id="inputEmpresa"
                     />
                     <ContenedorInput
-                        labelText="Contraseña"
-                        placeholderText="••••••••"
-                        password={true}
-                        id="inputPassword"
+                        labelText="Tipo de comercio"
+                        placeholderText="Restaurante"
+                        password={false}
+                        id="inputTipoEmpresa"
+                    />
+                    <ContenedorInput
+                        labelText="Intervalo para conteo de inventario"
+                        placeholderText="mensual"
+                        password={false}
+                        id="inputTiempoInventario"
                     />
                 </View>
                 <ContenedorBotones
-                    textoPrincipal="Iniciar sesión"
-                    textoSecundario="Crear una nueva cuenta"
-                    funcionPrincipal={ goToHome }
-                    funcionSecundaria={ viewCrearCuenta }
+                    textoPrincipal="Finalizar registro"
+                    textoSecundario="Ya tengo registrada mi empresa"
+                    funcionPrincipal={ viewLogin }
+                    funcionSecundaria={ viewLogin }
                 />
             </View>
         </ImageBackground>
@@ -91,4 +92,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Login;
+export default RegistrarEmpresa;
