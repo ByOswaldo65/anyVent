@@ -16,7 +16,7 @@ const fondoLogin = require('../assets/img/charlie-harris-__UJv4GPRFE-unsplash.jp
 
 const RegistrarEmpresa = () => {    
     const [empresa, setEmpresa] = React.useState('');
-    const [tipoEmpresa, setTipoEmpresa] = React.useState('Seleccionar tipo de comercio');
+    const [tipoEmpresa, setTipoEmpresa] = React.useState('');
     const [tiempoInventario, setTiempoInventario] = React.useState('');   
     const [showAlert, setShowAlert] = React.useState(false); 
     const [mostrarSegundoPicker, setMostrarSegundoPicker] = React.useState(false);
