@@ -1,15 +1,37 @@
 // registrarEmpresa.js
 import React from "react";
 import { View, Text, StyleSheet, Dimensions, ImageBackground } from "react-native";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import ContenedorInput from "./elementosLogin/ContenedorInput";
 import ContenedorBotones from "./elementosLogin/ContenedorBotones";
+
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "./conection/firebase-config";
 
 const { width, height } = Dimensions.get('window');
 const fondoLogin = require('../assets/img/charlie-harris-__UJv4GPRFE-unsplash.jpg');
 
-const RegistrarEmpresa = () => {
+const RegistrarEmpresa = () => {    
     const navigation = useNavigation();
+    const route = useRoute();
+    const { email, password } = route.params;
+
+    const handleCreateAccount = () => {
+        console.log("Correo:", email);
+        console.log("Contraseña:", password);
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+            console.log("Usuario creado con éxito");            
+        }) 
+        .catch((error) => {
+            console.log(error);            
+        });          
+    }
 
     const viewLogin = () => {
         console.log("Redireccionando a Login");
@@ -46,7 +68,7 @@ const RegistrarEmpresa = () => {
                 <ContenedorBotones
                     textoPrincipal="Finalizar registro"
                     textoSecundario="Ya tengo registrada mi empresa"
-                    funcionPrincipal={ viewLogin }
+                    funcionPrincipal={ handleCreateAccount }
                     funcionSecundaria={ viewLogin }
                 />
             </View>

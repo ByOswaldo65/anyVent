@@ -9,6 +9,8 @@ const { width, height } = Dimensions.get('window');
 const fondoLogin = require('../assets/img/charlie-harris-__UJv4GPRFE-unsplash.jpg');
 
 const CrearCuenta = () => {
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
     const navigation = useNavigation();
 
     const viewLogin = () => {
@@ -16,9 +18,11 @@ const CrearCuenta = () => {
         navigation.navigate('Login');
     }
 
-    const viewRegistrarEmpresa = () => {
+    const viewRegistrarEmpresa = () => {        
+        console.log("Correo:", email);
+        console.log("Contraseña:", password);
         console.log("Redireccionando a Registrar Empresa");
-        navigation.navigate('RegistrarEmpresa');
+        navigation.navigate('RegistrarEmpresa', { email, password });
     }
 
     return (
@@ -40,6 +44,7 @@ const CrearCuenta = () => {
                         placeholderText="user@gmail.com"
                         password={false}
                         id="inputCorreo"
+                        onChangeText={text => setEmail(text)}
                     />
                     <ContenedorInput
                         labelText="Número de contacto"
@@ -52,6 +57,7 @@ const CrearCuenta = () => {
                         placeholderText="••••••••"
                         password={true}
                         id="inputPassword"
+                        onChangeText={text => setPassword(text)}
                     />
                 </View>
                 <ContenedorBotones

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
 
-const ContenedorInput = ({ labelText, placeholderText, onChangeHeight, password, id}) => {
+const ContenedorInput = ({ labelText, placeholderText, onChangeHeight, password, id, onChangeText }) => {
     const [inputHeight, setInputHeight] = useState(0);
 
     return (
@@ -14,6 +14,7 @@ const ContenedorInput = ({ labelText, placeholderText, onChangeHeight, password,
                 id={id}
                 multiline={false}
                 secureTextEntry={password}
+                onChangeText={onChangeText}
                 onContentSizeChange={(event) => {
                     setInputHeight(event.nativeEvent.contentSize.height);
                     if (onChangeHeight) {
