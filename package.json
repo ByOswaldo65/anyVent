@@ -16,13 +16,18 @@
     "@react-native-picker/picker": "^2.7.6",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/stack": "^6.3.29",
+    "axios": "^1.7.2",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
     "expo": "~51.0.8",
     "expo-status-bar": "~1.12.1",
+    "express": "^4.19.2",
     "firebase": "^10.12.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "^0.74.1",
     "react-native-awesome-alerts": "^2.0.0",
+    "react-native-paper": "^5.12.3",
     "react-native-svg": "15.2.0"
   },
   "devDependencies": {

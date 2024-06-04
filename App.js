@@ -5,7 +5,7 @@ import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/
 import Login from './components/login';
 import HomeScreen from './components/HomeScreen';
 import PrincipalLogin from './components/principalLogin';
-import CrearCuenta from './components/crearCuenta'
+import CrearCuenta from './components/crearCuenta';  
 import RegistrarEmpresa from './components/registrarEmpresa';
 import Principal from './components/principal';
 

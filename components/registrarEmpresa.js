@@ -6,10 +6,10 @@ import ContenedorBotones from "./elementosLogin/ContenedorBotones";
 import ContenedorSelect from "./elementosLogin/ContenedorSelect";
 import AwesomeAlert from 'react-native-awesome-alerts';
 
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+/* import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "./conection/firebase-config";
+import { firebaseConfig } from "./conection/firebase-cconfig"; */
 
 const { width, height } = Dimensions.get('window');
 const fondoLogin = require('../assets/img/charlie-harris-__UJv4GPRFE-unsplash.jpg');
@@ -30,8 +30,8 @@ const RegistrarEmpresa = () => {
 
     const handleCreateAccount = () => {
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        /* const auth = getAuth(app);
+        const db = getFirestore(app); */
 
         console.log("Empresa:", empresa);
         console.log("Tipo de empresa:", tipoEmpresa);
@@ -45,7 +45,7 @@ const RegistrarEmpresa = () => {
                 return;
             }
 
-            createUserWithEmailAndPassword(auth, email, password)
+            /* createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
                 const userData = {
@@ -71,7 +71,7 @@ const RegistrarEmpresa = () => {
             }) 
             .catch((error) => {
                 console.error("Error al crear usuario: ", error);
-            });          
+            });  */         
         }                
     }
 
