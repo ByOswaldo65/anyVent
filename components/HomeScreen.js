@@ -1,36 +1,57 @@
 // HomeScreen.js
-import React from "react";
+import React, { useState } from "react";
 import { Pressable, View, Text, StyleSheet } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import { Checkbox } from 'react-native-paper';
 
 const HomeScreen = () => {
     const [checked, setChecked] = React.useState(false);
+    const [isPressed, setIsPressed] = useState(false);
+
+    const navigation = useNavigation();
+
+    const viewLogin = () => {
+        console.log("Redireccionando a Login");
+        navigation.navigate('Login');
+    }
+
+    const viewPrincipal = () => {
+        console.log("Redireccionando a Principal")
+        navigation.navigate('Principal')
+    }
+
+    const handlePress = () => {
+        setIsPressed(!isPressed);
+    };
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Hola User!</Text>
-            <Text style={ styles.subtitle }>Te damos la bienvenida a anyVent</Text>
-            <Text style={ styles.textoPrincipal }>Para comenzar necesitamos que descargues nuestra plantilla para brindarnos información acerca de tu inventario</Text>
+            <Text style={styles.subtitle}>Te damos la bienvenida a AnyVent</Text>
+            <Text style={styles.textoPrincipal}>Para comenzar necesitamos que descargues nuestra plantilla para brindarnos información acerca de tu inventario</Text>
             <View style={styles.containerCheckbox}>
                 <Checkbox
                     status={checked ? 'checked' : 'unchecked'}
                     onPress={() => {
                         setChecked(!checked);
                     }}
-                    color="#319506" // Cambiar color del checkbox
+                    color="#319506"
                 />
                 <Text onPress={() => setChecked(!checked)} style={styles.text}>
                     Acepto compartir información sobre mi inventario
                 </Text>
             </View>
-            <Pressable style={styles.btnPrincipal} onPress={() => {}}>
+            <Pressable style={styles.btnPrincipal} onPress={() => { }}>
                 <Text style={styles.btnPrincipalTexto}>Descargar plantilla</Text>
             </Pressable>
-            <Text style={ styles.textoSecundario }>Necesitará llenar la información de la plantilla descargada para poder subir su inventario</Text>
-            <Pressable style={styles.btnSecundario} onPress={() => {}}>
-                <Text style={styles.btnSecundarioTexto}>Subir archivo</Text>
+            <Text style={styles.textoSecundario}>Necesitará llenar la información de la plantilla descargada para poder subir su inventario</Text>
+            <Pressable style={[styles.btnSecundario, isPressed && styles.btnPressed]} onPress={handlePress}>
+                <Text style={styles.btnSecundarioTexto} id="txtBtnArchivo">Subir archivo</Text>
             </Pressable>
-            <Pressable style={styles.btnOmitir} onPress={() => {}}>
+            <Pressable id="btnInicarAnyVent" style={[styles.btnPressed, isPressed && styles.mostrarBtn]} onPress={viewPrincipal}>
+                <Text style={styles.mostrarBtnColor}>Iniciar AnyVent</Text>
+            </Pressable>
+            <Pressable style={styles.btnOmitir} onPress={viewLogin}>
                 <Text style={styles.btnOmitirTexto}>Omitir y continuar sin inventario (no recomendado)</Text>
             </Pressable>
         </View>
@@ -38,6 +59,23 @@ const HomeScreen = () => {
 }
 
 const styles = StyleSheet.create({
+    btnPressed: {
+        display: 'none'
+    },
+    mostrarBtn: {
+        display: 'flex',
+        backgroundColor: 'transparent',
+        padding: 12,
+        paddingHorizontal: 26,
+        borderRadius: 100,
+        borderWidth: 1,
+        borderColor: '#3e3e3e',
+        marginTop: 40,
+        marginBottom: 5
+    },
+    mostrarBtnColor: {
+        color: '#2d2d2d'
+    },
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -99,7 +137,7 @@ const styles = StyleSheet.create({
         padding: 12,
         paddingHorizontal: 26,
         borderColor: '#1a8200',
-        marginTop: 30
+        marginTop: 32
     },
     btnSecundarioTexto: {
         color: '#1a8200'
