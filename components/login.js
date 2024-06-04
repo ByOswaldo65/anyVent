@@ -1,9 +1,10 @@
 // Login.js
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Dimensions, ImageBackground } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import ContenedorInput from "./elementosLogin/ContenedorInput";
 import ContenedorBotones from "./elementosLogin/ContenedorBotones";
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
@@ -17,29 +18,38 @@ const fondoLogin = require('../assets/img/charlie-harris-__UJv4GPRFE-unsplash.jp
 const Login = () => {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [showAlert, setShowAlert] = React.useState(false); 
     const navigation = useNavigation();
+
+    useEffect(() => {
+        
+    }, []);
     
     const handleLogin = () => {
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);        
-
-        signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            const token = user.stsTokenManager.accessToken;
-            console.log("Usuario logueado con éxito: ", token);
-            AsyncStorage.setItem('authToken', token)
-                .then(() => {
-                    console.log("Token almacenado con éxito");
-                    navigation.navigate('HomeScreen');
-                })
-                .catch((error) => {
-                    console.error("Error al almacenar el token: ", error);
-                });         
-        })
-        .catch((error) => {
-            console.error("Error al iniciar sesión: ", error);
-        });        
+        if(!email || !password){
+            setShowAlert(true);
+        }else{
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);        
+    
+            signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                const token = user.stsTokenManager.accessToken;
+                console.log("Usuario logueado con éxito: ", token);
+                AsyncStorage.setItem('authToken', token)
+                    .then(() => {
+                        console.log("Token almacenado con éxito");
+                        navigation.navigate('HomeScreen');
+                    })
+                    .catch((error) => {
+                        console.error("Error al almacenar el token: ", error);
+                    });         
+            })
+            .catch((error) => {
+                console.error("Error al iniciar sesión: ", error);
+            }); 
+        }               
     }
 
     const viewCrearCuenta = () => {
@@ -75,6 +85,16 @@ const Login = () => {
                     textoSecundario="Crear una nueva cuenta"
                     funcionPrincipal={ handleLogin }
                     funcionSecundaria={ viewCrearCuenta }
+                />
+                <AwesomeAlert
+                show={showAlert}
+                title="Campos vacíos"
+                message="Por favor, completa todos los campos."
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={false}
+                showConfirmButton={true}
+                confirmText="Entendido"
+                onConfirmPressed={() => setShowAlert(false)}
                 />
             </View>
         </ImageBackground>
