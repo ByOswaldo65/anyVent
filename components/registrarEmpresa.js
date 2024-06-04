@@ -6,6 +6,7 @@ import ContenedorInput from "./elementosLogin/ContenedorInput";
 import ContenedorBotones from "./elementosLogin/ContenedorBotones";
 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "./conection/firebase-config";
 
@@ -13,23 +14,44 @@ const { width, height } = Dimensions.get('window');
 const fondoLogin = require('../assets/img/charlie-harris-__UJv4GPRFE-unsplash.jpg');
 
 const RegistrarEmpresa = () => {    
+    const [empresa, setEmpresa] = React.useState('');
+    const [tipoEmpresa, setTipoEmpresa] = React.useState('');
+    const [tiempoInventario, setTiempoInventario] = React.useState('');    
     const navigation = useNavigation();
     const route = useRoute();
-    const { email, password } = route.params;
+    const { email, password, username, phone } = route.params;
 
     const handleCreateAccount = () => {
-        console.log("Correo:", email);
-        console.log("Contraseña:", password);
-
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-
+        const db = getFirestore(app);
+    
         createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-            console.log("Usuario creado con éxito");            
+        .then((userCredential) => {
+            const user = userCredential.user;
+            const userData = {
+                cempresa: empresa,
+                cintervalo: tiempoInventario,
+                cusuario: username,
+                nUID: user.uid,
+                ncomerciotipo: tipoEmpresa,
+                ncontacto: phone,
+                nestatus: "1"
+            };
+    
+            // Guardar los datos adicionales en Firestore
+            addDoc(collection(db, "users"), userData)
+            .then(() => {
+                console.log("Datos adicionales guardados con éxito en Firestore");
+            })
+            .catch((error) => {
+                console.error("Error al guardar datos adicionales en Firestore: ", error);
+            });
+            
+            console.log("Usuario creado con éxito");
         }) 
         .catch((error) => {
-            console.log(error);            
+            console.error("Error al crear usuario: ", error);
         });          
     }
 
@@ -51,18 +73,21 @@ const RegistrarEmpresa = () => {
                         placeholderText="NombreEjemplo"
                         password={false}
                         id="inputEmpresa"
+                        onChangeText={text => setEmpresa(text)}
                     />
                     <ContenedorInput
                         labelText="Tipo de comercio"
                         placeholderText="Restaurante"
                         password={false}
                         id="inputTipoEmpresa"
+                        onChangeText={text => setTipoEmpresa(text)}
                     />
                     <ContenedorInput
                         labelText="Intervalo para conteo de inventario"
                         placeholderText="mensual"
                         password={false}
                         id="inputTiempoInventario"
+                        onChangeText={text => setTiempoInventario(text)}
                     />
                 </View>
                 <ContenedorBotones

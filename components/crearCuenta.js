@@ -11,6 +11,9 @@ const fondoLogin = require('../assets/img/charlie-harris-__UJv4GPRFE-unsplash.jp
 const CrearCuenta = () => {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [username, setUsername] = React.useState('');
+    const [phone, setPhone] = React.useState('');
+
     const navigation = useNavigation();
 
     const viewLogin = () => {
@@ -22,7 +25,7 @@ const CrearCuenta = () => {
         console.log("Correo:", email);
         console.log("Contraseña:", password);
         console.log("Redireccionando a Registrar Empresa");
-        navigation.navigate('RegistrarEmpresa', { email, password });
+        navigation.navigate('RegistrarEmpresa', { email, password, username, phone });
     }
 
     return (
@@ -38,6 +41,7 @@ const CrearCuenta = () => {
                         placeholderText="UsuarioEjemplo"
                         password={false}
                         id="inputUsuario"
+                        onChangeText={text => setUsername(text)}
                     />
                     <ContenedorInput
                         labelText="Correo electrónico"
@@ -51,6 +55,7 @@ const CrearCuenta = () => {
                         placeholderText="442#######"
                         password={false}
                         id="inputNumero"
+                        onChangeText={text => setPhone(text)}
                     />
                     <ContenedorInput
                         labelText="Contraseña"
