@@ -1,51 +1,126 @@
-// principal.js
 import React from "react";
-import { View, Text, StyleSheet, Dimensions, ImageBackground } from "react-native";
-// import { useNavigation, useRoute } from '@react-navigation/native';
+import { ScrollView, View, Text, StyleSheet, Dimensions, ImageBackground, FlatList } from "react-native";
 import TarjetaPrincipal from "./elementosPrincipal/tarjetaPrincipal";
+import TarjetaSecundaria from "./elementosPrincipal/tarjetaSecundaria";
+import MenuPrincipal from "./menuPrincipal";
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
-const Principal = () => {    
-    // const navigation = useNavigation();
-    // const route = useRoute();
-
-    // const viewDetalles = () => {
-    //     console.log("Redireccionando a Login");
-    //     navigation.navigate('Login');
-    // }
-
+const Principal = () => {
     return (
-        <View id="contenedorPrincipal" style={styles.contenedorPrincipal}>
-            <View style={styles.header}>
-                <Text>Bienvenido User!</Text>
-                <View style={styles.contenedorImgPerfil}>
-                    <ImageBackground source={require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg')} style={styles.imgPerfil}></ImageBackground>
+        <View style={styles.container}>
+            <ScrollView contentContainerStyle={styles.contenedorPrincipal} showsVerticalScrollIndicator={false}>
+                <View style={styles.header}>
+                    <Text style={styles.txtTituloPrincipal}>Bienvenido User!</Text>
+                    <View style={styles.contenedorImgPerfil}>
+                        <ImageBackground source={require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg')} style={styles.imgPerfil}></ImageBackground>
+                    </View>
                 </View>
-            </View>
-            <TarjetaPrincipal 
-                nombre="Hamburguesa especial"
-                descripcion="Prepárate para una experiencia gastronómica inigualable con nuestra Hamburguesa Supreme. Jugosa carne de res Angus a la parrilla..."
-                precio="$260.99 MXN"
-                rendimiento="Más vendido"
-                img={require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg')}
-            />
+                <Text style={styles.txtSubtitulo}>Tus productos con rendimiento positivo</Text>
+                <TarjetaPrincipal
+                    nombre="Hamburguesa especial"
+                    descripcion="Prepárate para una experiencia gastronómica inigualable con nuestra Hamburguesa Supreme. Jugosa carne de res Angus a la parrilla..."
+                    precio="$260.99 MXN"
+                    estado={1}
+                    rendimiento="Más vendido"
+                    img={require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg')}
+                />
+                <TarjetaPrincipal
+                    nombre="Hamburguesa especial"
+                    descripcion="Prepárate para una experiencia gastronómica inigualable con nuestra Hamburguesa Supreme. Jugosa carne de res Angus a la parrilla..."
+                    precio="$260.99 MXN"
+                    estado={1}
+                    rendimiento="Más vendido"
+                    img={require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg')}
+                />
+                <FlatList
+                    horizontal
+                    contentContainerStyle={styles.tarjetasSecundarias}
+                    data={[
+                        { nombre: "Hamburguesa especial", precio: "$260.99 MXN", img: require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg') },
+                        { nombre: "Hamburguesa especial", precio: "$260.99 MXN", img: require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg') }
+                    ]}
+                    renderItem={({ item }) => (
+                        <TarjetaSecundaria
+                            nombre={item.nombre}
+                            precio={item.precio}
+                            img={item.img}
+                        />
+                    )}
+                    keyExtractor={(item, index) => index.toString()}
+                    showsHorizontalScrollIndicator={false}
+                />
+                <TarjetaPrincipal
+                    nombre="Patas de Hugo"
+                    descripcion="Prepárate para una experiencia gastronómica inigualable con nuestra Hamburguesa Supreme. Jugosa carne de res Angus a la parrilla..."
+                    precio="$1260.99 MXN"
+                    estado={1}
+                    rendimiento="Más vendido"
+                    img={require('../assets/img/monika-grabkowska-P1aohbiT-EY-unsplash.jpg')}
+                />
+                <Text style={[styles.txtSubtitulo, styles.txtSubtituloNegativos]}>Tus productos con rendimiento negativo</Text>
+                <TarjetaPrincipal
+                    nombre="Hamburguesa especial"
+                    descripcion="Prepárate para una experiencia gastronómica inigualable con nuestra Hamburguesa Supreme. Jugosa carne de res Angus a la parrilla..."
+                    precio="$260.99 MXN"
+                    estado={0}
+                    rendimiento="Más vendido"
+                    img={require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg')}
+                />
+                <TarjetaPrincipal
+                    nombre="Hamburguesa especial"
+                    descripcion="Prepárate para una experiencia gastronómica inigualable con nuestra Hamburguesa Supreme. Jugosa carne de res Angus a la parrilla..."
+                    precio="$260.99 MXN"
+                    estado={0}
+                    rendimiento="Más vendido"
+                    img={require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg')}
+                />
+                <FlatList
+                    horizontal
+                    contentContainerStyle={styles.tarjetasSecundarias}
+                    data={[
+                        { nombre: "Hamburguesa especial", precio: "$260.99 MXN", img: require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg') },
+                        { nombre: "Hamburguesa especial", precio: "$260.99 MXN", img: require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg') }
+                    ]}
+                    renderItem={({ item }) => (
+                        <TarjetaSecundaria
+                            nombre={item.nombre}
+                            precio={item.precio}
+                            img={item.img}
+                        />
+                    )}
+                    keyExtractor={(item, index) => index.toString()}
+                    showsHorizontalScrollIndicator={false}
+                />
+                <TarjetaPrincipal
+                    nombre="Patas de Hugo"
+                    descripcion="Prepárate para una experiencia gastronómica inigualable con nuestra Hamburguesa Supreme. Jugosa carne de res Angus a la parrilla..."
+                    precio="$1260.99 MXN"
+                    estado={0}
+                    rendimiento="Más vendido"
+                    img={require('../assets/img/monika-grabkowska-P1aohbiT-EY-unsplash.jpg')}
+                />
+            </ScrollView>
+            <MenuPrincipal style={styles.estiloMenu} />
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    contenedorPrincipal: {
+    container: {
         flex: 1,
-        width: width,
-        height: height,
-        justifyContent: 'flex-start',
+    },
+    contenedorPrincipal: {
+        flexGrow: 1,
+        width: '100%',
         alignItems: 'center',
-        marginTop: 70
+        justifyContent: 'center',
+        paddingTop: 70, // Ajusta el marginTop a paddingTop para evitar problemas de desplazamiento
+        paddingBottom: 70, // Añade espacio inferior para el menú fijo
     },
     contenedorImgPerfil: {
-        borderRadius: 100,         
-        overflow: 'hidden', 
+        borderRadius: 100,
+        overflow: 'hidden',
     },
     imgPerfil: {
         width: 45,
@@ -54,12 +129,9 @@ const styles = StyleSheet.create({
     header: {
         marginBottom: 20,
         alignItems: 'center',
-        position: 'relative',
-        display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        top: 0,
-        width: '90%'
+        width: '85%'
     },
     title: {
         fontSize: 26,
@@ -71,10 +143,25 @@ const styles = StyleSheet.create({
         color: '#EAEAEA',
         marginTop: 20,
     },
-    inputContainer: {
-        width: '80%',
-        marginBottom: 20,
-        marginTop: 40,
+    txtTituloPrincipal: {
+        fontSize: 18,
+        color: '#2d2d2d',
+        fontWeight: '400'
+    },
+    tarjetasSecundarias: {
+        alignItems: 'center', 
+        paddingHorizontal: 10,
+        justifyContent: 'flex-start',
+        paddingLeft: 20,
+    },
+    txtSubtitulo: {
+        fontSize: 18,
+        color: '#3e3e3e',
+        fontWeight: '500',
+        textAlign: 'center',
+        width: '90%',
+        marginTop: 20,
+        marginBottom: 5
     }
 });
 
