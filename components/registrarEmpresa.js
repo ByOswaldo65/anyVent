@@ -5,7 +5,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import ContenedorInput from "./elementosLogin/ContenedorInput";
 import ContenedorBotones from "./elementosLogin/ContenedorBotones";
 
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "./conection/firebase-config";
@@ -43,6 +43,7 @@ const RegistrarEmpresa = () => {
             addDoc(collection(db, "users"), userData)
             .then(() => {
                 console.log("Datos adicionales guardados con éxito en Firestore");
+                navigation.navigate('Login');
             })
             .catch((error) => {
                 console.error("Error al guardar datos adicionales en Firestore: ", error);
