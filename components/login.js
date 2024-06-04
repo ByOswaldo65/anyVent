@@ -25,7 +25,7 @@ const Login = () => {
         .then((userCredential) => {
             const user = userCredential.user;
             console.log("Usuario logueado con éxito: ", user);
-            console.log("Redireccionando a HomeScreen");
+            console.log("Redireccionando a HomeScreen ");
             navigation.navigate('HomeScreen');            
         })
         .catch((error) => {
