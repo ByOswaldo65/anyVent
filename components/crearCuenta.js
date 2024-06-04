@@ -1,9 +1,9 @@
-// crearCuenta.js
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Dimensions, ImageBackground } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import ContenedorInput from "./elementosLogin/ContenedorInput";
 import ContenedorBotones from "./elementosLogin/ContenedorBotones";
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 const { width, height } = Dimensions.get('window');
 const fondoLogin = require('../assets/img/charlie-harris-__UJv4GPRFE-unsplash.jpg');
@@ -13,8 +13,15 @@ const CrearCuenta = () => {
     const [password, setPassword] = React.useState('');
     const [username, setUsername] = React.useState('');
     const [phone, setPhone] = React.useState('');
+    const [titulo, setTitulo] = React.useState('');
+    const [texto, setTexto] = React.useState('');
+    const [showAlert, setShowAlert] = React.useState(false);
 
     const navigation = useNavigation();
+
+    useEffect(() => {
+        
+    }, []);
 
     const viewLogin = () => {
         console.log("Redireccionando a Login");
@@ -24,8 +31,29 @@ const CrearCuenta = () => {
     const viewRegistrarEmpresa = () => {        
         console.log("Correo:", email);
         console.log("Contraseña:", password);
+        if (!email || !password || !username || !phone) {
+            setTitulo("Campos vacíos");
+            setTexto("Por favor, completa todos los campos.");
+            setShowAlert(true);
+            return;
+        }
+
+        if( !email.includes('@') || !email.includes('.') ){
+            setTitulo("Correo inválido");
+            setTexto("Por favor, ingresa un correo válido.");
+            setShowAlert(true);
+            return;
+        }
+
+        if ( password.length < 6 ){
+            setTitulo("Contraseña inválida");
+            setTexto("La contraseña debe tener al menos 6 caracteres.");
+            setShowAlert(true);
+            return;
+        }
+
         console.log("Redireccionando a Registrar Empresa");
-        navigation.navigate('RegistrarEmpresa', { email, password, username, phone });
+        navigation.navigate('RegistrarEmpresa', { email, password, username, phone });                
     }
 
     return (
@@ -70,6 +98,16 @@ const CrearCuenta = () => {
                     textoSecundario="Ya tengo una cuenta"
                     funcionPrincipal={ viewRegistrarEmpresa }
                     funcionSecundaria={ viewLogin }
+                />
+                <AwesomeAlert
+                show={showAlert}
+                title={titulo}
+                message={texto}
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={false}
+                showConfirmButton={true}
+                confirmText="Entendido"
+                onConfirmPressed={() => setShowAlert(false)}
                 />
             </View>
         </ImageBackground>
