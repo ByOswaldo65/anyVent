@@ -1,8 +1,9 @@
-// HomeScreen.js
 import React, { useState } from "react";
-import { Pressable, View, Text, StyleSheet } from "react-native";
+import { Pressable, View, Text, StyleSheet, Alert, Platform } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { Checkbox } from 'react-native-paper';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 
 const HomeScreen = () => {
     const [checked, setChecked] = React.useState(false);
@@ -24,6 +25,36 @@ const HomeScreen = () => {
         setIsPressed(!isPressed);
     };
 
+    const downloadTemplate = async () => {
+        console.log('Descargando plantilla...');
+        const uri = 'http://192.168.100.7:3000/download/template'; // Asegúrate de usar la IP correcta
+        console.log('URI:', uri);
+        const fileUri = FileSystem.documentDirectory + 'plantillaProductos.xlsx';
+    
+        try {
+            console.log('Descargando archivo...');
+            const { uri: localUri } = await FileSystem.downloadAsync(uri, fileUri);
+            const info = await FileSystem.getInfoAsync(localUri);
+            console.log('Información del archivo:', info);
+            Alert.alert('Descarga completa', 'El archivo se ha descargado con éxito.');
+            console.log('Archivo descargado en:', localUri);
+    
+            // Compartir el archivo usando FileProvider
+            if (Platform.OS === 'android' && !(await Sharing.isAvailableAsync())) {
+                Alert.alert(
+                    'Compartir no está disponible',
+                    'La función de compartir no está disponible en este dispositivo.'
+                );
+                return;
+            }
+
+            await Sharing.shareAsync(localUri);
+        } catch (error) {
+            Alert.alert('Error de descarga', 'Hubo un problema al descargar el archivo.');
+            console.log('Error al descargar el archivo:', error);
+        }
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Hola User!</Text>
@@ -41,7 +72,7 @@ const HomeScreen = () => {
                     Acepto compartir información sobre mi inventario
                 </Text>
             </View>
-            <Pressable style={styles.btnPrincipal} onPress={() => { }}>
+            <Pressable style={styles.btnPrincipal} onPress={downloadTemplate}>
                 <Text style={styles.btnPrincipalTexto}>Descargar plantilla</Text>
             </Pressable>
             <Text style={styles.textoSecundario}>Necesitará llenar la información de la plantilla descargada para poder subir su inventario</Text>
