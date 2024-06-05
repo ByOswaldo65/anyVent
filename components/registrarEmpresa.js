@@ -1,14 +1,12 @@
-// registrarEmpresa.js
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Dimensions, ImageBackground } from "react-native";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import ContenedorInput from "./elementosLogin/ContenedorInput";
 import ContenedorBotones from "./elementosLogin/ContenedorBotones";
+import ContenedorSelect from "./elementosLogin/ContenedorSelect";
+import AwesomeAlert from 'react-native-awesome-alerts';
 
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "./conection/firebase-config";
+import { register } from './conection/authService'; 
 
 const { width, height } = Dimensions.get('window');
 const fondoLogin = require('../assets/img/charlie-harris-__UJv4GPRFE-unsplash.jpg');
@@ -16,45 +14,48 @@ const fondoLogin = require('../assets/img/charlie-harris-__UJv4GPRFE-unsplash.jp
 const RegistrarEmpresa = () => {    
     const [empresa, setEmpresa] = React.useState('');
     const [tipoEmpresa, setTipoEmpresa] = React.useState('');
-    const [tiempoInventario, setTiempoInventario] = React.useState('');    
+    const [tiempoInventario, setTiempoInventario] = React.useState('');   
+    const [titulo, setTitulo] = React.useState('');
+    const [texto, setTexto] = React.useState('');
+    const [showAlert, setShowAlert] = React.useState(false); 
+    const [mostrarSegundoPicker, setMostrarSegundoPicker] = React.useState(false);
     const navigation = useNavigation();
     const route = useRoute();
     const { email, password, username, phone } = route.params;
 
-    const handleCreateAccount = () => {
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-    
-        createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            const userData = {
-                cempresa: empresa,
-                cintervalo: tiempoInventario,
-                cusuario: username,
-                nUID: user.uid,
-                ncomerciotipo: tipoEmpresa,
-                ncontacto: phone,
-                nestatus: "1"
-            };
-    
-            // Guardar los datos adicionales en Firestore
-            addDoc(collection(db, "users"), userData)
-            .then(() => {
-                console.log("Datos adicionales guardados con éxito en Firestore");
-                navigation.navigate('Login');
-            })
-            .catch((error) => {
-                console.error("Error al guardar datos adicionales en Firestore: ", error);
-            });
-            
-            console.log("Usuario creado con éxito");
-        }) 
-        .catch((error) => {
-            console.error("Error al crear usuario: ", error);
-        });          
-    }
+    useEffect(() => {
+        
+     }, []);
+
+     const handleCreateAccount = async () => {
+        console.log("Empresa:", empresa);
+        console.log("Tipo de empresa:", tipoEmpresa);
+        console.log("Tiempo de inventario:", tiempoInventario);
+      
+        if (!empresa || !tipoEmpresa) {
+          setTitulo("Campos vacíos");
+          setTexto("Por favor, completa todos los campos.");
+          setShowAlert(true);
+        } else {
+          if (tipoEmpresa === 'productos' && !tiempoInventario) {
+            setTitulo("Campos vacíos");
+            setTexto("Por favor, completa todos los campos.");
+            setShowAlert(true);
+            return;
+          }
+      
+          try {
+            const userData = await register(email, password, username, phone, empresa, tipoEmpresa, tiempoInventario);
+            console.log("Usuario creado con éxito: ", userData);
+            navigation.navigate('Login');
+          } catch (error) {
+            console.log('Error', error.message);
+            setTitulo("Error al crear usuario");
+            setTexto(error.message);
+            setShowAlert(true);
+          }
+        }
+      }
 
     const viewLogin = () => {
         console.log("Redireccionando a Login");
@@ -75,27 +76,50 @@ const RegistrarEmpresa = () => {
                         password={false}
                         id="inputEmpresa"
                         onChangeText={text => setEmpresa(text)}
-                    />
-                    <ContenedorInput
+                    />                    
+                    <ContenedorSelect
                         labelText="Tipo de comercio"
-                        placeholderText="Restaurante"
-                        password={false}
-                        id="inputTipoEmpresa"
-                        onChangeText={text => setTipoEmpresa(text)}
+                        options={[
+                            { label: "Seleccionar tipo", value: "" },
+                            { label: "Productos", value: "productos" },
+                            { label: "Comida", value: "comida" },                            
+                        ]}
+                        selectedValue={tipoEmpresa}
+                        onValueChange={value => {
+                            setTipoEmpresa(value);
+                            setMostrarSegundoPicker(value === 'productos'); 
+                        }}
                     />
-                    <ContenedorInput
-                        labelText="Intervalo para conteo de inventario"
-                        placeholderText="mensual"
-                        password={false}
-                        id="inputTiempoInventario"
-                        onChangeText={text => setTiempoInventario(text)}
-                    />
+                    {mostrarSegundoPicker && (
+                        <ContenedorSelect
+                            labelText="Intervalo para conteo de inventario"
+                            options={[
+                                { label: "Seleccionar un intervalo", value: "" },
+                                { label: "Mensual", value: "mensual" },
+                                { label: "Bimestral", value: "bimestral" },                            
+                                { label: "Trimestral", value: "trimestral" },                            
+                                { label: "Semestral", value: "semestral" },                            
+                            ]}
+                            selectedValue={tiempoInventario}
+                            onValueChange={value => setTiempoInventario(value)}
+                        />
+                    )}
                 </View>
                 <ContenedorBotones
                     textoPrincipal="Finalizar registro"
                     textoSecundario="Ya tengo registrada mi empresa"
                     funcionPrincipal={ handleCreateAccount }
                     funcionSecundaria={ viewLogin }
+                />
+                <AwesomeAlert
+                show={showAlert}
+                title={titulo}
+                message={texto}
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={false}
+                showConfirmButton={true}
+                confirmText="Entendido"
+                onConfirmPressed={() => setShowAlert(false)}
                 />
             </View>
         </ImageBackground>
