@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, StyleSheet, Pressable, Dimensions } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import Principal from "./principal";
 
 const { width } = Dimensions.get('window');
 
@@ -14,6 +13,11 @@ const MenuPrincipal = () => {
         navigation.navigate("Principal")
     }
 
+    const viewPrincipalFuturo = () => {
+        console.log("Redireccionando a Principal Futuro")
+        navigation.navigate("PrincipalFuturo")
+    }
+
     return (
         <View style={styles.contenedorMenu}>
             <Pressable onPress={viewPrincipal}>
@@ -22,7 +26,7 @@ const MenuPrincipal = () => {
             <Pressable onPress={() => { }}>
                 <Ionicons style={styles.estiloIconos} name="search" size={24} color="black" /> 
             </Pressable>
-            <Pressable onPress={() => { }}>
+            <Pressable onPress={viewPrincipalFuturo}>
                 <Ionicons style={styles.estiloIconos} name="analytics" size={24} color="black" />
             </Pressable>
             <Pressable onPress={() => { }}>

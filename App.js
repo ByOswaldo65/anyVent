@@ -8,6 +8,8 @@ import PrincipalLogin from './components/principalLogin';
 import CrearCuenta from './components/crearCuenta';  
 import RegistrarEmpresa from './components/registrarEmpresa';
 import Principal from './components/principal';
+import DetallesProducto from './components/detallesProducto';
+import PrincipalFuturo from './components/principalFuturo'
 
 const Stack = createStackNavigator();
 
@@ -45,29 +47,37 @@ export default function App() {
           },
         }}
       >
-        <Stack.Screen 
-          name="PrincipalLogin" 
-          component={ PrincipalLogin } 
+        <Stack.Screen
+          name="PrincipalLogin"
+          component={PrincipalLogin}
         />
-        <Stack.Screen 
-          name="CrearCuenta" 
-          component={ CrearCuenta } 
+        <Stack.Screen
+          name="CrearCuenta"
+          component={CrearCuenta}
         />
-        <Stack.Screen 
-          name="RegistrarEmpresa" 
-          component={ RegistrarEmpresa } 
+        <Stack.Screen
+          name="RegistrarEmpresa"
+          component={RegistrarEmpresa}
         />
-        <Stack.Screen 
-          name="Login" 
-          component={ Login } 
+        <Stack.Screen
+          name="Login"
+          component={Login}
         />
-        <Stack.Screen 
-          name="HomeScreen" 
-          component={ HomeScreen } 
+        <Stack.Screen
+          name="HomeScreen"
+          component={HomeScreen}
         />
-        <Stack.Screen 
-          name="Principal" 
-          component={ Principal } 
+        <Stack.Screen
+          name="Principal"
+          component={Principal}
+        />
+        <Stack.Screen
+          name="DetallesProducto"
+          component={DetallesProducto}
+        />
+        <Stack.Screen
+          name="PrincipalFuturo"
+          component={PrincipalFuturo}
         />
       </Stack.Navigator>
     </NavigationContainer>

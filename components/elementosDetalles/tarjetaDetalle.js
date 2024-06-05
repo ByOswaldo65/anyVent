@@ -1,11 +1,11 @@
 import React from "react";
-import { View, Text, StyleSheet, Dimensions, ImageBackground, Pressable } from "react-native";
-import { overlay } from "react-native-paper";
-// import { useNavigation } from '@react-navigation/native';
+import { View, Text, StyleSheet, ImageBackground} from "react-native";
+import { FontAwesome6, MaterialIcons } from '@expo/vector-icons';
 
-const TarjetaPrincipal = ({ nombre, descripcion, precio, estado, img, verDetalles }) => {
+const TarjetaDetalle = ({ nombre, precio, estado, img }) => {
     const textoRendimiento = estado === 1 ? "Más vendido" : "Menos vendido";
     const estiloRendimiento = estado === 1 ? styles.masVendido : styles.menosVendido;
+    const icono = estado === 1 ? <FontAwesome6 style={styles.iconoPositivo} name="money-bill-trend-up" size={24} color="rgba(240, 240, 240, 1)" /> : <MaterialIcons style={marginRight=0} name="money-off" size={24} color="rgba(240, 240, 240, 1)" />;
 
     return (
         <View style={styles.contenedorTarjeta}>
@@ -13,16 +13,13 @@ const TarjetaPrincipal = ({ nombre, descripcion, precio, estado, img, verDetalle
                 <View style={styles.overlay}>
                     <View style={styles.header}>
                         <Text style={[styles.textColor, styles.contenedorEstado, estiloRendimiento]} id="txtRendimiento">{textoRendimiento}</Text>
-                        <Pressable onPress={verDetalles}>
-                            <Text style={[styles.textColor, styles.btnDetalles]}>Detalles</Text>
-                        </Pressable>
+                        <Text style={[styles.textColor, styles.txtPrecio]} id="txtPrecioProducto">{precio}</Text>
                     </View>
                     <View style={[styles.overlayInfoProducto]}>
                         <View style={[styles.header, styles.headerInfoProducto]}>
+                            <View style={styles.estiloIcono}>{icono}</View>
                             <Text style={[styles.textColor, styles.nombreProducto]} id="txtNombreProducto">{nombre}</Text>
-                            <Text style={[styles.textColor, styles.txtPrecio]} id="txtPrecioProducto">{precio}</Text>
                         </View>
-                        <Text style={[styles.textColor, styles.txtDesc]} id="txtDescProducto">{descripcion}</Text>
                     </View>
                 </View>
             </ImageBackground>
@@ -33,10 +30,11 @@ const TarjetaPrincipal = ({ nombre, descripcion, precio, estado, img, verDetalle
 const styles = StyleSheet.create({
     contenedorTarjeta: {
         width: '90%',
-        height: 300,
+        height: 160,
         marginVertical: 10,
         borderRadius: 20,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        marginBottom: 22
     },
     textColor: {
         color: '#fdfdfd'
@@ -63,7 +61,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         paddingTop: 20,
-        paddingBottom: 20,
+        paddingLeft: 8,
+        paddingRight: 8,
+        paddingBottom: 0,
         borderTopEndRadius: 30,
         borderTopLeftRadius: 30
     },
@@ -80,7 +80,8 @@ const styles = StyleSheet.create({
     },
     headerInfoProducto: {
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'flex-start'
     },
     contenedorEstado: {
         backgroundColor: 'rgba(11, 106, 9, 0.81)',
@@ -97,10 +98,11 @@ const styles = StyleSheet.create({
     },
     nombreProducto: {
         fontWeight: '500',
-        fontSize: 16
+        fontSize: 16,
+        marginTop: 1
     },
     txtPrecio: {
-        fontSize: 15,
+        fontSize: 16,
         fontWeight: '800',
         margin: 0,
         padding: 0,
@@ -121,7 +123,13 @@ const styles = StyleSheet.create({
     },
     menosVendido: {
         backgroundColor: 'rgba(106, 9, 9, 0.81)'
+    },
+    estiloIcono: {
+        marginRight: 8
+    },
+    iconoPositivo: {
+        marginRight: 4
     }
 });
 
-export default TarjetaPrincipal;
+export default TarjetaDetalle;
