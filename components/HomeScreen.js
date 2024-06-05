@@ -1,15 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Pressable, View, Text, StyleSheet, Alert, Platform } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { Checkbox } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
+import { set } from "@gluestack-style/react";
 
 const HomeScreen = () => {
     const [checked, setChecked] = React.useState(false);
     const [isPressed, setIsPressed] = useState(false);
-
+    const [userUID, setUserUID] = useState(null);
     const navigation = useNavigation();
+
+    useEffect(() => {        
+        const fetchUserUID = async () => {
+            const UID = await AsyncStorage.getItem('UID');
+            setUserUID(UID);
+            console.log("UID del usuario:", UID);            
+        };
+
+        fetchUserUID(); 
+    }, []);    
 
     const viewLogin = () => {
         console.log("Redireccionando a Login");
@@ -27,7 +39,7 @@ const HomeScreen = () => {
 
     const downloadTemplate = async () => {
         console.log('Descargando plantilla...');
-        const uri = 'http://192.168.100.7:3000/download/template'; // Asegúrate de usar la IP correcta
+        const uri = 'http://192.168.100.7:3000/download/template'; 
         console.log('URI:', uri);
         const fileUri = FileSystem.documentDirectory + 'plantillaProductos.xlsx';
     
@@ -38,8 +50,7 @@ const HomeScreen = () => {
             console.log('Información del archivo:', info);
             Alert.alert('Descarga completa', 'El archivo se ha descargado con éxito.');
             console.log('Archivo descargado en:', localUri);
-    
-            // Compartir el archivo usando FileProvider
+                
             if (Platform.OS === 'android' && !(await Sharing.isAvailableAsync())) {
                 Alert.alert(
                     'Compartir no está disponible',

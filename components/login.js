@@ -13,6 +13,7 @@ const fondoLogin = require('../assets/img/charlie-harris-__UJv4GPRFE-unsplash.jp
 const Login = () => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [texto, setTexto] = React.useState('');
   const [showAlert, setShowAlert] = React.useState(false); 
   const navigation = useNavigation();
 
@@ -26,14 +27,14 @@ const Login = () => {
     } else {
       try {
         console.log(email, password);
-        const data = await login(email, password);
-        const token = data.token;
-        console.log("Usuario logueado con éxito: ", token);
-        await AsyncStorage.setItem('authToken', token);
-        console.log("Token almacenado con éxito");
+        const data = await login(email, password);           
+        const UID = data.uid.data;           
+        console.log("Usuario logueado con éxito: ", UID);         
+        await AsyncStorage.setItem('UID', UID);        
         navigation.navigate('HomeScreen');
       } catch (error) {
         console.error("Error al iniciar sesión: ", error);
+        setTexto(error.message);
         setShowAlert(true);
       }
     }
@@ -76,7 +77,7 @@ const Login = () => {
         <AwesomeAlert
           show={showAlert}
           title="Error de autenticación"
-          message="Usuario o contraseña incorrectos."
+          message={texto}
           closeOnTouchOutside={true}
           closeOnHardwareBackPress={false}
           showConfirmButton={true}

@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-const { loginUser } = require('./authService');
+const { loginUser, registerUser } = require('./authService');
 
 const app = express();
 const port = 3000;
@@ -21,16 +21,29 @@ app.get('/download/template', (req, res) => {
     });
   });
 
-app.post('/api/login', async (req, res) => {
-  const { email, password } = req.body;
-  console.log('Email:', email, 'Password:', password)
-  try {
-    const token = await loginUser(email, password);
-    res.status(200).json({ token });
-  } catch (error) {
-    res.status(401).json({ message: 'Credenciales incorrectas', error: error.message });
-  }
-});
+  app.post('/api/login', async (req, res) => {
+    const { email, password } = req.body;
+    try {
+      const uid = await loginUser(email, password);
+      res.status(200).json({ uid });
+    } catch (error) {
+      res.status(401).json({ message: error.message });
+    }
+  });
+  
+  app.post('/api/register', async (req, res) => {
+    const { email, password, username, phone, empresa, tipoEmpresa, tiempoInventario } = req.body;
+    try {
+      const result = await registerUser(email, password, username, phone, empresa, tipoEmpresa, tiempoInventario);
+      if (result.success === 1) {
+        res.status(200).json(result);
+      } else {
+        res.status(400).json(result);
+      }
+    } catch (error) {
+      res.status(500).json({ message: 'Error al procesar la solicitud.', error });
+    }
+  });
 
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://192.168.100.7:${port}`);
