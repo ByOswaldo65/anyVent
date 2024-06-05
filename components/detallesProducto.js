@@ -4,10 +4,21 @@ import { FontAwesome6, MaterialIcons } from '@expo/vector-icons';
 import TarjetaDetalle from "./elementosDetalles/tarjetaDetalle"
 import MenuPrincipal from "./menuPrincipal";
 import Widget from "./elementosDetalles/widgets"
+import TarjetaRecomendacion from "./elementosDetalles/recomendacion";
+import GraficaLineal from "./elementosDetalles/graficaLineal";
 
 const { width } = Dimensions.get('window');
 
 const DetallesProducto = () => {
+    const data = {
+        labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
+        datasets: [
+            {
+                data: [40, 35, 28, 40, 15]
+            }
+        ]
+    };
+
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.contenedorPrincipal} showsVerticalScrollIndicator={false}>
@@ -24,11 +35,43 @@ const DetallesProducto = () => {
                     estado={0}
                     img={require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg')}
                 />
-                <View>
-                    <Widget 
-                        titulo={"Total de ventas"}
-                        mensaje={"30 ventas"}
-                        icono={<MaterialIcons name="money-off" size={24} color="rgba(240, 240, 240, 1)" />}
+                <GraficaLineal data={data} />
+                <View style={styles.contenedorWidgets}>
+                    <FlatList
+                        horizontal
+                        contentContainerStyle={styles.tarjetasSecundarias}
+                        data={[
+                            { titulo: "Total de ventas", mensaje: "30 ventas" },
+                            { titulo: "Rendimiento", mensaje: "Negativo" }
+                        ]}
+                        renderItem={({ item }) => (
+                            <Widget
+                                titulo={item.titulo}
+                                mensaje={item.mensaje}
+                            />
+                        )}
+                        keyExtractor={(item, index) => index.toString()}
+                        showsHorizontalScrollIndicator={false}
+                    />
+                </View>
+                <Text style={[styles.txtSubtitulo, styles.txtSubtituloPrincipal]}>Recomendaciones para aumentar el rendimiento</Text>
+                <View style={styles.contenedorWidgets}>
+                    <FlatList
+                        horizontal
+                        contentContainerStyle={styles.tarjetasSecundarias}
+                        data={[
+                            { recomendacion: "Bajar precio del producto" },
+                            { recomendacion: "Buscar nuevos proveedores" },
+                            { recomendacion: "Añadir descuentos" }
+                        ]}
+                        renderItem={({ item }) => (
+                            <TarjetaRecomendacion
+                                recomendacion={item.recomendacion}
+                                mensaje={item.recomendacion}
+                            />
+                        )}
+                        keyExtractor={(item, index) => index.toString()}
+                        showsHorizontalScrollIndicator={false}
                     />
                 </View>
             </ScrollView>
@@ -49,7 +92,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         paddingTop: 70,
-        paddingBottom: 70
+        paddingBottom: 90
     },
     contenedorImgPerfil: {
         borderRadius: 100,
@@ -82,7 +125,7 @@ const styles = StyleSheet.create({
         fontWeight: '400'
     },
     tarjetasSecundarias: {
-        alignItems: 'center', 
+        alignItems: 'center',
         paddingHorizontal: 10,
         justifyContent: 'flex-start',
         paddingLeft: 20,
@@ -95,6 +138,16 @@ const styles = StyleSheet.create({
         width: '90%',
         marginTop: 20,
         marginBottom: 5
+    },
+    contenedorWidgets: {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '99%',
+        justifyContent: 'space-between',
+        marginTop: 8
+    },
+    txtSubtituloPrincipal: {
+        fontSize: 15
     }
 });
 

@@ -33,7 +33,8 @@ const styles = StyleSheet.create({
         height: 160,
         marginVertical: 10,
         borderRadius: 20,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        marginBottom: 22
     },
     textColor: {
         color: '#fdfdfd'
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
         marginTop: 1
     },
     txtPrecio: {
-        fontSize: 15,
+        fontSize: 16,
         fontWeight: '800',
         margin: 0,
         padding: 0,

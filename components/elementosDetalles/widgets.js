@@ -1,29 +1,48 @@
 import React from "react";
-import { View, Text, StyleSheet, Dimensions, ImageBackground, Pressable } from "react-native";
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { View, Text, StyleSheet } from "react-native";
 
-const TarjetaSecundaria = ({ titulo, mensaje, icono }) => {
+const TarjetaSecundaria = ({ titulo, mensaje}) => {
     return (
         <View style={styles.contenedorWidget}>
             <View style={styles.headerWidget}>
-                <View >{icono}</View>
-                <Text>{titulo}</Text>
+                <Text style={[styles.textColor, styles.textMensaje]}>{titulo}</Text>
             </View>
-            <Text>{mensaje}</Text>
+            <Text style={[styles.textColor, styles.textTitulo]}>{mensaje}</Text>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     contenedorWidget: {
-        backgroundColor: "#2B0449",
-        width: 150,
+        backgroundColor: "#171717",
+        width: 170,
         borderRadius: 14,
-        padding: 14
+        padding: 14,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 10
     },
     headerWidget: {
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    textColor: {
+        color: '#fdfdfd'
+    },
+    textTitulo: {
+        fontWeight: 600,
+        fontSize: 16
+    },
+    icono: {
+        marginRight: 5
+    },
+    textMensaje: {
+        fontSize: 15,
+        fontWeight: 400,
+        marginBottom: 5
     }
 });
 

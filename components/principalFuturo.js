@@ -5,9 +5,10 @@ import TarjetaPrincipal from "./elementosPrincipal/tarjetaPrincipal";
 import TarjetaSecundaria from "./elementosPrincipal/tarjetaSecundaria";
 import MenuPrincipal from "./menuPrincipal";
 
+
 const { width } = Dimensions.get('window');
 
-const Principal = () => {
+const PrincipalFuturo = () => {
     const navigation = useNavigation();
 
     const viewDetallesProducto = () => {
@@ -18,13 +19,14 @@ const Principal = () => {
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.contenedorPrincipal} showsVerticalScrollIndicator={false}>
+                
                 <View style={styles.header}>
-                    <Text style={styles.txtTituloPrincipal}>Bienvenido User!</Text>
+                    <Text style={styles.txtTituloPrincipal}>Descubre el futuro de tus ventas!</Text>
                     <View style={styles.contenedorImgPerfil}>
                         <ImageBackground source={require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg')} style={styles.imgPerfil}></ImageBackground>
                     </View>
                 </View>
-                <Text style={styles.txtSubtitulo}>Tus productos con rendimiento positivo</Text>
+                <Text style={styles.txtSubtitulo}>Productos con futuro rendimiento positivo</Text>
                 <TarjetaPrincipal
                     nombre="Hamburguesa especial"
                     descripcion="Prepárate para una experiencia gastronómica inigualable con nuestra Hamburguesa Supreme. Jugosa carne de res Angus a la parrilla..."
@@ -70,7 +72,7 @@ const Principal = () => {
                     img={require('../assets/img/monika-grabkowska-P1aohbiT-EY-unsplash.jpg')}
                     verDetalles={viewDetallesProducto}
                 />
-                <Text style={[styles.txtSubtitulo, styles.txtSubtituloNegativos]}>Tus productos con rendimiento negativo</Text>
+                <Text style={[styles.txtSubtitulo, styles.txtSubtituloNegativos]}>Productos con futuro rendimiento negativo</Text>
                 <TarjetaPrincipal
                     nombre="Hamburguesa especial"
                     descripcion="Prepárate para una experiencia gastronómica inigualable con nuestra Hamburguesa Supreme. Jugosa carne de res Angus a la parrilla..."
@@ -181,4 +183,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Principal;
+export default PrincipalFuturo;
