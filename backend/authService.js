@@ -60,13 +60,10 @@ const registerUser = async (email, password, username, phone, empresa, tipoEmpre
 
 const getUserData = async (nUID) => {
   try {
-    // Creamos una referencia a la colección "usuarios"
     const usersRef = collection(db, "users");
-
-    // Obtenemos todos los documentos de la colección
+    
     const querySnapshot = await getDocs(usersRef);
 
-    // Iteramos sobre cada documento para encontrar el que tenga el nUID proporcionado
     let userData = null;
     querySnapshot.forEach((doc) => {
       if (doc.data().nUID === nUID) {
@@ -74,10 +71,8 @@ const getUserData = async (nUID) => {
       }
     });
 
-    // Devolvemos los datos del usuario encontrado o null si no se encontró
     return userData;
   } catch (error) {
-    // Si ocurre algún error, lo mostramos en la consola y devolvemos null
     console.error("Error al obtener los datos del usuario:", error);
     return null;
   }

@@ -3,16 +3,26 @@ import { Pressable, View, Text, StyleSheet, Alert, Platform } from "react-native
 import { useNavigation } from '@react-navigation/native';
 import { Checkbox } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
+import * as DocumentPicker from 'expo-document-picker';
 import { set } from "@gluestack-style/react";
 import { getUser } from './conection/authService'; 
+
+import { initializeApp } from "firebase/app";
+import { getFirestore, addDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { firebaseConfig } from "./conection/firebase-config";
 
 const HomeScreen = () => {
     const [checked, setChecked] = React.useState(false);
     const [isPressed, setIsPressed] = useState(false);
+    const [tipoComercio, setTipoComercio] = useState('');
     const [userUID, setUserUID] = useState(null);
     const navigation = useNavigation();
+
+    const app = initializeApp(firebaseConfig);    
+    const db = getFirestore(app);
 
     useEffect(() => {        
         const fetchUserUID = async () => {
@@ -21,6 +31,9 @@ const HomeScreen = () => {
             console.log("UID del usuario:", UID);            
             const userData = await getUser(UID);
             console.log("Datos del usuario:", userData);
+            const { ncomerciotipo } = userData;            
+            console.log('ncomerciotipo:', ncomerciotipo);
+            setTipoComercio(ncomerciotipo);
         };
 
         fetchUserUID(); 
@@ -36,15 +49,82 @@ const HomeScreen = () => {
         navigation.navigate('Principal')
     }
 
-    const handlePress = () => {
+/*     const handlePress = () => {
         setIsPressed(!isPressed);
+    }; */
+
+    const handlePress = async () => {
+        try {
+            // Seleccionar el archivo desde el dispositivo
+            const file = await DocumentPicker.getDocumentAsync({ type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            console.log('Archivo seleccionado:', file);
+            
+            if (!file.assets || file.assets.length === 0) {
+                console.log('No se seleccionó ningún archivo');    
+                return;
+            }
+                        
+            const formData = new FormData();
+            formData.append('file', {
+                uri: file.assets[0].uri,
+                name: 'plantilla.xlsx',
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            });                 
+            formData.append('tipo', tipoComercio);
+            console.log(formData);
+            
+            const response = await axios.post('http://192.168.100.7:3000/convertExcel', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Accept': 'application/json',
+                },
+            });
+    
+            if (!response.data.success) {
+                throw new Error('Error al enviar el archivo al servidor');
+            }
+            
+            const dataArreglo = response.data.data;
+            console.log('Datos recibidos:', dataArreglo);
+            const arreglo = JSON.parse(dataArreglo);
+
+            if (Array.isArray(arreglo)) {
+                arreglo.forEach(async (item) => {
+                    item.nUID = userUID; 
+                    try {
+                        await addDoc(collection(db, "datosVenta"), item);
+                    } catch (error) {
+                        console.error("Error al agregar el documento: ", error);
+                    }
+                });
+                Alert.alert('Archivo enviado', 'El archivo se ha enviado al servidor y ha sido convertido a JSON exitosamente.');
+                navigation.navigate('Principal');
+            } else {
+                throw new Error('La respuesta del servidor no es un arreglo');
+            }
+            
+            Alert.alert('Archivo enviado', 'El archivo se ha enviado al servidor y ha sido convertido a JSON exitosamente.');
+
+            navigation.navigate('Principal')    
+        } catch (error) {
+            console.error('Error:', error);
+            Alert.alert('Error', 'Hubo un problema al enviar el archivo al servidor.');
+        }
     };
 
     const downloadTemplate = async () => {
         console.log('Descargando plantilla...');
-        const uri = 'http://192.168.100.7:3000/download/template'; 
+        const baseUri = 'http://192.168.100.7:3000/download/template'; 
+        const queryParam = `?tipoComercio=${tipoComercio}`;
+        const uri = baseUri + queryParam;
         console.log('URI:', uri);
-        const fileUri = FileSystem.documentDirectory + 'plantillaProductos.xlsx';
+        let fileName = 'plantillaProductos.xlsx'; 
+  
+        if (tipoComercio == 'comida') {      
+            fileName = 'plantillaComida.xlsx'; 
+        }
+
+        const fileUri = FileSystem.documentDirectory + fileName;
         
         try {
             console.log('Descargando archivo...');
