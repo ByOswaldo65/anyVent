@@ -1,7 +1,7 @@
 // backend/authService.js
 const { initializeApp } = require('firebase/app');
 const { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } = require('firebase/auth');
-const { getFirestore, addDoc, collection } = require('firebase/firestore');
+const { getFirestore, addDoc, collection, query, where, getDocs } = require('firebase/firestore');
 const firebaseConfig = require('./firebase-config');
 
 const app = initializeApp(firebaseConfig);
@@ -27,12 +27,10 @@ const loginUser = async (email, password) => {
 };
 
 const registerUser = async (email, password, username, phone, empresa, tipoEmpresa, tiempoInventario) => {
-  try {
-    // Crear el usuario con correo electrónico y contraseña
+  try {    
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-
-    // Datos adicionales del usuario
+    
     const userData = {
       cempresa: empresa,
       cintervalo: tipoEmpresa === 'productos' ? tiempoInventario : '',
@@ -60,7 +58,26 @@ const registerUser = async (email, password, username, phone, empresa, tipoEmpre
   }
 };
 
+const getUserData = async (nUID) => {
+  try {    
+    console.log("UID get:", nUID)
+    const usersRef = collection(db, "usuarios");    
+    const q = query(usersRef, where("nUID", "==", nUID));
+    const querySnapshot = await getDocs(q);
+    
+    if (!querySnapshot.empty) {      
+      return querySnapshot.docs[0].data();
+    } else {      
+      return null;
+    }
+  } catch (error) {    
+    console.error("Error al obtener los datos del usuario:", error);
+    return null;
+  }
+};
+
 module.exports = {
   loginUser,
-  registerUser
+  registerUser,
+  getUserData
 };

@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { set } from "@gluestack-style/react";
+import { getUser } from './conection/authService'; 
 
 const HomeScreen = () => {
     const [checked, setChecked] = React.useState(false);
@@ -18,6 +19,8 @@ const HomeScreen = () => {
             const UID = await AsyncStorage.getItem('UID');
             setUserUID(UID);
             console.log("UID del usuario:", UID);            
+            const userData = await getUser(UID);
+            console.log("Datos del usuario:", userData);
         };
 
         fetchUserUID(); 
@@ -42,7 +45,7 @@ const HomeScreen = () => {
         const uri = 'http://192.168.100.7:3000/download/template'; 
         console.log('URI:', uri);
         const fileUri = FileSystem.documentDirectory + 'plantillaProductos.xlsx';
-    
+        
         try {
             console.log('Descargando archivo...');
             const { uri: localUri } = await FileSystem.downloadAsync(uri, fileUri);
