@@ -3,15 +3,16 @@ import { View, Text, StyleSheet, Dimensions, ImageBackground, Pressable } from "
 import { overlay } from "react-native-paper";
 // import { useNavigation } from '@react-navigation/native';
 
-const { width, height } = Dimensions.get('window');
+const TarjetaPrincipal = ({ nombre, descripcion, precio, estado, img }) => {
+    const textoRendimiento = estado === 1 ? "Más vendido" : "Menos vendido";
+    const estiloRendimiento = estado === 1 ? styles.masVendido : styles.menosVendido;
 
-const TarjetaPrincipal = ({ nombre, descripcion, precio, rendimiento, img }) => {
     return (
         <View style={styles.contenedorTarjeta}>
             <ImageBackground source={img} style={styles.backgroundImage}>
                 <View style={styles.overlay}>
                     <View style={styles.header}>
-                        <Text style={[styles.textColor, styles.contenedorEstado]} id="txtRendimiento">{rendimiento}</Text>
+                        <Text style={[styles.textColor, styles.contenedorEstado, estiloRendimiento]} id="txtRendimiento">{textoRendimiento}</Text>
                         <Pressable onPress={() => {}}>
                             <Text style={[styles.textColor, styles.btnDetalles]}>Detalles</Text>
                         </Pressable>
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
         width: '90%',
         height: 300,
         marginVertical: 10,
-        borderRadius: 10,
+        borderRadius: 20,
         overflow: 'hidden'
     },
     textColor: {
@@ -114,6 +115,12 @@ const styles = StyleSheet.create({
     btnDetalles: {
         fontWeight: 500,
         fontSize: 15
+    },
+    masVendido: {
+        backgroundColor: 'rgba(11, 106, 9, 0.81)'
+    },
+    menosVendido: {
+        backgroundColor: 'rgba(106, 9, 9, 0.81)'
     }
 });
 
