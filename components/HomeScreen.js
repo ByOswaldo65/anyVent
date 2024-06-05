@@ -1,36 +1,99 @@
-// HomeScreen.js
-import React from "react";
-import { Pressable, View, Text, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Pressable, View, Text, StyleSheet, Alert, Platform } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import { Checkbox } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import { set } from "@gluestack-style/react";
 
 const HomeScreen = () => {
     const [checked, setChecked] = React.useState(false);
+    const [isPressed, setIsPressed] = useState(false);
+    const [userUID, setUserUID] = useState(null);
+    const navigation = useNavigation();
+
+    useEffect(() => {        
+        const fetchUserUID = async () => {
+            const UID = await AsyncStorage.getItem('UID');
+            setUserUID(UID);
+            console.log("UID del usuario:", UID);            
+        };
+
+        fetchUserUID(); 
+    }, []);    
+
+    const viewLogin = () => {
+        console.log("Redireccionando a Login");
+        navigation.navigate('Login');
+    }
+
+    const viewPrincipal = () => {
+        console.log("Redireccionando a Principal")
+        navigation.navigate('Principal')
+    }
+
+    const handlePress = () => {
+        setIsPressed(!isPressed);
+    };
+
+    const downloadTemplate = async () => {
+        console.log('Descargando plantilla...');
+        const uri = 'http://192.168.100.7:3000/download/template'; 
+        console.log('URI:', uri);
+        const fileUri = FileSystem.documentDirectory + 'plantillaProductos.xlsx';
+    
+        try {
+            console.log('Descargando archivo...');
+            const { uri: localUri } = await FileSystem.downloadAsync(uri, fileUri);
+            const info = await FileSystem.getInfoAsync(localUri);
+            console.log('Información del archivo:', info);
+            Alert.alert('Descarga completa', 'El archivo se ha descargado con éxito.');
+            console.log('Archivo descargado en:', localUri);
+                
+            if (Platform.OS === 'android' && !(await Sharing.isAvailableAsync())) {
+                Alert.alert(
+                    'Compartir no está disponible',
+                    'La función de compartir no está disponible en este dispositivo.'
+                );
+                return;
+            }
+
+            await Sharing.shareAsync(localUri);
+        } catch (error) {
+            Alert.alert('Error de descarga', 'Hubo un problema al descargar el archivo.');
+            console.log('Error al descargar el archivo:', error);
+        }
+    };
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Hola User!</Text>
-            <Text style={ styles.subtitle }>Te damos la bienvenida a anyVent</Text>
-            <Text style={ styles.textoPrincipal }>Para comenzar necesitamos que descargues nuestra plantilla para brindarnos información acerca de tu inventario</Text>
+            <Text style={styles.subtitle}>Te damos la bienvenida a AnyVent</Text>
+            <Text style={styles.textoPrincipal}>Para comenzar necesitamos que descargues nuestra plantilla para brindarnos información acerca de tu inventario</Text>
             <View style={styles.containerCheckbox}>
                 <Checkbox
                     status={checked ? 'checked' : 'unchecked'}
                     onPress={() => {
                         setChecked(!checked);
                     }}
-                    color="#319506" // Cambiar color del checkbox
+                    color="#319506"
                 />
                 <Text onPress={() => setChecked(!checked)} style={styles.text}>
                     Acepto compartir información sobre mi inventario
                 </Text>
             </View>
-            <Pressable style={styles.btnPrincipal} onPress={() => {}}>
+            <Pressable style={styles.btnPrincipal} onPress={downloadTemplate}>
                 <Text style={styles.btnPrincipalTexto}>Descargar plantilla</Text>
             </Pressable>
-            <Text style={ styles.textoSecundario }>Necesitará llenar la información de la plantilla descargada para poder subir su inventario</Text>
-            <Pressable style={styles.btnSecundario} onPress={() => {}}>
-                <Text style={styles.btnSecundarioTexto}>Subir archivo</Text>
+            <Text style={styles.textoSecundario}>Necesitará llenar la información de la plantilla descargada para poder subir su inventario</Text>
+            <Pressable style={[styles.btnSecundario, isPressed && styles.btnPressed]} onPress={handlePress}>
+                <Text style={styles.btnSecundarioTexto} id="txtBtnArchivo">Subir archivo</Text>
             </Pressable>
-            <Pressable style={styles.btnOmitir} onPress={() => {}}>
+            <Pressable id="btnInicarAnyVent" style={[styles.btnPressed, isPressed && styles.mostrarBtn]} onPress={viewPrincipal}>
+                <Text style={styles.mostrarBtnColor}>Iniciar AnyVent</Text>
+            </Pressable>
+            <Pressable style={styles.btnOmitir} onPress={viewLogin}>
                 <Text style={styles.btnOmitirTexto}>Omitir y continuar sin inventario (no recomendado)</Text>
             </Pressable>
         </View>
@@ -38,6 +101,23 @@ const HomeScreen = () => {
 }
 
 const styles = StyleSheet.create({
+    btnPressed: {
+        display: 'none'
+    },
+    mostrarBtn: {
+        display: 'flex',
+        backgroundColor: 'transparent',
+        padding: 12,
+        paddingHorizontal: 26,
+        borderRadius: 100,
+        borderWidth: 1,
+        borderColor: '#3e3e3e',
+        marginTop: 40,
+        marginBottom: 5
+    },
+    mostrarBtnColor: {
+        color: '#2d2d2d'
+    },
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -99,7 +179,7 @@ const styles = StyleSheet.create({
         padding: 12,
         paddingHorizontal: 26,
         borderColor: '#1a8200',
-        marginTop: 30
+        marginTop: 32
     },
     btnSecundarioTexto: {
         color: '#1a8200'

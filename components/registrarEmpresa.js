@@ -6,10 +6,7 @@ import ContenedorBotones from "./elementosLogin/ContenedorBotones";
 import ContenedorSelect from "./elementosLogin/ContenedorSelect";
 import AwesomeAlert from 'react-native-awesome-alerts';
 
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "./conection/firebase-config";
+import { register } from './conection/authService'; 
 
 const { width, height } = Dimensions.get('window');
 const fondoLogin = require('../assets/img/charlie-harris-__UJv4GPRFE-unsplash.jpg');
@@ -18,6 +15,8 @@ const RegistrarEmpresa = () => {
     const [empresa, setEmpresa] = React.useState('');
     const [tipoEmpresa, setTipoEmpresa] = React.useState('');
     const [tiempoInventario, setTiempoInventario] = React.useState('');   
+    const [titulo, setTitulo] = React.useState('');
+    const [texto, setTexto] = React.useState('');
     const [showAlert, setShowAlert] = React.useState(false); 
     const [mostrarSegundoPicker, setMostrarSegundoPicker] = React.useState(false);
     const navigation = useNavigation();
@@ -28,52 +27,35 @@ const RegistrarEmpresa = () => {
         
      }, []);
 
-    const handleCreateAccount = () => {
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
+     const handleCreateAccount = async () => {
         console.log("Empresa:", empresa);
         console.log("Tipo de empresa:", tipoEmpresa);
         console.log("Tiempo de inventario:", tiempoInventario);
-
-        if(!empresa || !tipoEmpresa){
+      
+        if (!empresa || !tipoEmpresa) {
+          setTitulo("Campos vacíos");
+          setTexto("Por favor, completa todos los campos.");
+          setShowAlert(true);
+        } else {
+          if (tipoEmpresa === 'productos' && !tiempoInventario) {
+            setTitulo("Campos vacíos");
+            setTexto("Por favor, completa todos los campos.");
             setShowAlert(true);
-        }else{
-            if(tipoEmpresa === 'productos' && !tiempoInventario){
-                setShowAlert(true);
-                return;
-            }
-
-            createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                const userData = {
-                    cempresa: empresa,
-                    cintervalo: tipoEmpresa === 'productos' ? tiempoInventario : '',
-                    cusuario: username,
-                    nUID: user.uid,
-                    ncomerciotipo: tipoEmpresa,
-                    ncontacto: phone,
-                    nestatus: "1"
-                };
-                    
-                addDoc(collection(db, "users"), userData)
-                .then(() => {
-                    console.log("Datos adicionales guardados con éxito en Firestore");
-                    navigation.navigate('Login');
-                })
-                .catch((error) => {
-                    console.error("Error al guardar datos adicionales en Firestore: ", error);
-                });
-                
-                console.log("Usuario creado con éxito");
-            }) 
-            .catch((error) => {
-                console.error("Error al crear usuario: ", error);
-            });          
-        }                
-    }
+            return;
+          }
+      
+          try {
+            const userData = await register(email, password, username, phone, empresa, tipoEmpresa, tiempoInventario);
+            console.log("Usuario creado con éxito: ", userData);
+            navigation.navigate('Login');
+          } catch (error) {
+            console.log('Error', error.message);
+            setTitulo("Error al crear usuario");
+            setTexto(error.message);
+            setShowAlert(true);
+          }
+        }
+      }
 
     const viewLogin = () => {
         console.log("Redireccionando a Login");
@@ -131,8 +113,8 @@ const RegistrarEmpresa = () => {
                 />
                 <AwesomeAlert
                 show={showAlert}
-                title="Campos vacíos"
-                message="Por favor, completa todos los campos."
+                title={titulo}
+                message={texto}
                 closeOnTouchOutside={true}
                 closeOnHardwareBackPress={false}
                 showConfirmButton={true}
