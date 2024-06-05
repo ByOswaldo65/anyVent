@@ -40,6 +40,15 @@ const login = async (email, password) => {
       throw new Error(error.response?.data?.message || 'Error de registro.');
     }
   };
+
+  const getUser = async (UID) => {
+    try {
+      const response = await axios.get(`${API_URL}/user/${UID}`);
+      return response.data;
+    } catch (error) {
+      throw new Error('Error al obtener los datos del usuario.');
+    }
+  };
   
 
-export { login, register};
+export { login, register, getUser};

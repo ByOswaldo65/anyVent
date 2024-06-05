@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-const { loginUser, registerUser } = require('./authService');
+const { loginUser, registerUser, getUserData } = require('./authService');
 
 const app = express();
 const port = 3000;
@@ -43,6 +43,12 @@ app.get('/download/template', (req, res) => {
     } catch (error) {
       res.status(500).json({ message: 'Error al procesar la solicitud.', error });
     }
+  });
+
+  app.get('/api/user/:uid', async (req, res) => {
+    const { uid } = req.params;
+    const user = await getUserData(uid);
+    res.status(200).json(user);
   });
 
 app.listen(port, () => {
