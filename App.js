@@ -8,6 +8,7 @@ import PrincipalLogin from './components/principalLogin';
 import CrearCuenta from './components/crearCuenta'
 import RegistrarEmpresa from './components/registrarEmpresa';
 import Principal from './components/principal';
+import DetallesProducto from './components/detallesProducto';
 
 const Stack = createStackNavigator();
 
@@ -68,6 +69,10 @@ export default function App() {
         <Stack.Screen 
           name="Principal" 
           component={ Principal } 
+        />
+         <Stack.Screen 
+          name="DetallesProducto" 
+          component={ DetallesProducto} 
         />
       </Stack.Navigator>
     </NavigationContainer>

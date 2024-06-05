@@ -1,12 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet, Dimensions, ImageBackground, Pressable } from "react-native";
 
-const TarjetaSecundaria = ({ nombre, precio, img }) => {
+const TarjetaSecundaria = ({ nombre, precio, img, verDetalles }) => {
     // const holaaa = () => {
     //     console.log("holaaaaaa")
     // }
     return (
-        <Pressable style={styles.contenedorTarjeta} onPress={() => {}}>
+        <Pressable style={styles.contenedorTarjeta} onPress={verDetalles}>
             <ImageBackground source={img} style={styles.backgroundImage}>
                 <View style={styles.overlay}>
                     <Text style={[styles.textColor, styles.txtPrecio]}>{precio}</Text>

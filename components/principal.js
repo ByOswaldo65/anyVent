@@ -1,5 +1,6 @@
 import React from "react";
 import { ScrollView, View, Text, StyleSheet, Dimensions, ImageBackground, FlatList } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import TarjetaPrincipal from "./elementosPrincipal/tarjetaPrincipal";
 import TarjetaSecundaria from "./elementosPrincipal/tarjetaSecundaria";
 import MenuPrincipal from "./menuPrincipal";
@@ -7,6 +8,13 @@ import MenuPrincipal from "./menuPrincipal";
 const { width } = Dimensions.get('window');
 
 const Principal = () => {
+    const navigation = useNavigation();
+
+    const viewDetallesProducto = () => {
+        console.log("Redireccionando a Detalles Producto");
+        navigation.navigate('DetallesProducto');
+    }
+
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.contenedorPrincipal} showsVerticalScrollIndicator={false}>
@@ -24,6 +32,7 @@ const Principal = () => {
                     estado={1}
                     rendimiento="Más vendido"
                     img={require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg')}
+                    verDetalles={viewDetallesProducto}
                 />
                 <TarjetaPrincipal
                     nombre="Hamburguesa especial"
@@ -32,19 +41,21 @@ const Principal = () => {
                     estado={1}
                     rendimiento="Más vendido"
                     img={require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg')}
+                    verDetalles={viewDetallesProducto}
                 />
                 <FlatList
                     horizontal
                     contentContainerStyle={styles.tarjetasSecundarias}
                     data={[
-                        { nombre: "Hamburguesa especial", precio: "$260.99 MXN", img: require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg') },
-                        { nombre: "Hamburguesa especial", precio: "$260.99 MXN", img: require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg') }
+                        { nombre: "Hamburguesa especial", precio: "$260.99 MXN", img: require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg'), verDetalles: viewDetallesProducto },
+                        { nombre: "Hamburguesa especial", precio: "$260.99 MXN", img: require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg'), verDetalles: viewDetallesProducto }
                     ]}
                     renderItem={({ item }) => (
                         <TarjetaSecundaria
                             nombre={item.nombre}
                             precio={item.precio}
                             img={item.img}
+                            verDetalles={item.verDetalles}
                         />
                     )}
                     keyExtractor={(item, index) => index.toString()}
@@ -57,6 +68,7 @@ const Principal = () => {
                     estado={1}
                     rendimiento="Más vendido"
                     img={require('../assets/img/monika-grabkowska-P1aohbiT-EY-unsplash.jpg')}
+                    verDetalles={viewDetallesProducto}
                 />
                 <Text style={[styles.txtSubtitulo, styles.txtSubtituloNegativos]}>Tus productos con rendimiento negativo</Text>
                 <TarjetaPrincipal
@@ -66,6 +78,7 @@ const Principal = () => {
                     estado={0}
                     rendimiento="Más vendido"
                     img={require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg')}
+                    verDetalles={viewDetallesProducto}
                 />
                 <TarjetaPrincipal
                     nombre="Hamburguesa especial"
@@ -74,19 +87,21 @@ const Principal = () => {
                     estado={0}
                     rendimiento="Más vendido"
                     img={require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg')}
+                    verDetalles={viewDetallesProducto}
                 />
                 <FlatList
                     horizontal
                     contentContainerStyle={styles.tarjetasSecundarias}
                     data={[
-                        { nombre: "Hamburguesa especial", precio: "$260.99 MXN", img: require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg') },
-                        { nombre: "Hamburguesa especial", precio: "$260.99 MXN", img: require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg') }
+                        { nombre: "Hamburguesa especial", precio: "$260.99 MXN", img: require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg'), verDetalles: viewDetallesProducto },
+                        { nombre: "Hamburguesa especial", precio: "$260.99 MXN", img: require('../assets/img/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg'), verDetalles: viewDetallesProducto }
                     ]}
                     renderItem={({ item }) => (
                         <TarjetaSecundaria
                             nombre={item.nombre}
                             precio={item.precio}
                             img={item.img}
+                            verDetalles={item.verDetalles}
                         />
                     )}
                     keyExtractor={(item, index) => index.toString()}
@@ -99,6 +114,7 @@ const Principal = () => {
                     estado={0}
                     rendimiento="Más vendido"
                     img={require('../assets/img/monika-grabkowska-P1aohbiT-EY-unsplash.jpg')}
+                    verDetalles={viewDetallesProducto}
                 />
             </ScrollView>
             <MenuPrincipal style={styles.estiloMenu} />
